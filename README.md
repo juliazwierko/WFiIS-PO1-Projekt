@@ -10,7 +10,6 @@ z kontenerów !
 
 ---Mateusz---
 4. Wśród możliwych konstruktorów zadbaj o konstruktor przyjmujący jako parametr obiekt klasy std::initializer_list<double>
-
 5. Zaimplementuj operatory indeksujące [] i [][] przy czym dla macierzy pierwszy operator[]
 zwraca obiekt klasy wektor (czyli kolumnę).
 
