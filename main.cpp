@@ -14,8 +14,8 @@
 #include "nwektor.h"
 #include <cmath>
 int main() {
-    // nwektor w1=nwektor{{1,2,3,4,5,6,7}};
-    // nwektor w2=nwektor{{1,2,3,4,5,6,7,8,9,10,11}};
+    nwektor w1=nwektor{{1,2,3,4,5,6,7}};
+    nwektor w2=nwektor{{1,2,3,4,5,6,7,8,9,10,11}};
     // nwektor w3=w2+w1; //powinno skutkować wyjątkiem;
     // //użycie konstruktora i przypisania przenoszącego
     // nwektor w4=std::move(w1);
