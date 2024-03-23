@@ -9,10 +9,12 @@ z kontenerów !
 (w razie potrzeby doczytaj ten fragment w dokumentacji, bez obaw to tylko jedna klasa bez ciała).
 
 ---Mateusz---
+
 4. Wśród możliwych konstruktorów zadbaj o konstruktor przyjmujący jako parametr obiekt klasy std::initializer_list<double>
 5. Zaimplementuj operatory indeksujące [] i [][] przy czym dla macierzy pierwszy operator[]
 zwraca obiekt klasy wektor (czyli kolumnę).
 
 ---Sebastian---
+
 6. Dla macierzy przeładuj operator*() mnożenia macierzy przez macierz (o ile wymiary się zgadzają).
 7. Tablice i wektory mogą być duże, więc pamiętaj o konstruktorach i przypisaniach przenoszących.
