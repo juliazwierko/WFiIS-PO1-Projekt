@@ -1,3 +1,0 @@
-C:/Users/Seba/Desktop/WFiIS-PO1-Projekt/build/CMakeFiles/Poli.dir
-C:/Users/Seba/Desktop/WFiIS-PO1-Projekt/build/CMakeFiles/edit_cache.dir
-C:/Users/Seba/Desktop/WFiIS-PO1-Projekt/build/CMakeFiles/rebuild_cache.dir
