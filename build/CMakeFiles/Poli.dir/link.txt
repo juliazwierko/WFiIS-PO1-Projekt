@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\Poli.dir/objects.a
+C:\TDM-GCC-64\bin\ar.exe qc CMakeFiles\Poli.dir/objects.a @CMakeFiles\Poli.dir\objects1.rsp
+C:\TDM-GCC-64\bin\c++.exe -g -Wl,--whole-archive CMakeFiles\Poli.dir/objects.a -Wl,--no-whole-archive -o Poli.exe -Wl,--out-implib,libPoli.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Poli.dir\linkLibs.rsp

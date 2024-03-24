@@ -24,7 +24,7 @@ public:
     nwektor(nwektor&& other) noexcept : elements(nullptr), size(0) {
         *this = std::move(other);
     }
-
+    
     // Operator przypisania przenoszącego 
     nwektor& operator=(nwektor&& other) noexcept {
         if (this != &other) {
@@ -80,4 +80,52 @@ private:
 
 
 // TU ma byc klasa dla macierzy:
-// class ......
+class nmacierz
+{
+public:
+nmacierz() = default;
+nmacierz(int rows, int cols): rows(rows),cols(cols)
+{
+    elements=new double*[rows];
+    for(int i=0;i<rows;i++)
+    {
+        elements[i]=new double[cols];
+    }
+}
+~nmacierz()
+{
+    delete [] elements;
+}
+double *operator[](unsigned int row)
+{
+    return elements[row];
+}
+nmacierz operator*(nmacierz &other)
+{
+    
+    if(this->cols!=other.rows)
+    {
+        throw std::invalid_argument("Liczba kolumn i wierszy nie zgadza się, nie da się pomnożyć");
+    }
+    else
+    {
+        nmacierz wynik(rows, other.cols);
+        for(size_t i=0;i<rows;i++)
+        {
+            for(size_t j=0;i<other.cols;j++)
+            {
+                for(size_t k=0; k<cols; k++)
+                {
+                    wynik[i][j]+=elements[i][k]*other.elements[k][j];
+                }
+            }
+        }
+        return wynik;
+    }
+}
+private:
+int rows;
+int cols;
+double **elements;
+};
+
