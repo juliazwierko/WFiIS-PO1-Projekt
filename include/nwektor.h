@@ -83,163 +83,133 @@ private:
 class nmacierz
 {
 public:
-nmacierz() = default;
-nmacierz(int rows, int cols): rows(rows),cols(cols) //dziala
-{
-    elements=new double*[rows];
-    for(int i=0;i<rows;i++)
+    nmacierz() : rows(0), cols(0), elements(nullptr) {}
+    nmacierz(int rows, int cols) : rows(rows), cols(cols), elements(nullptr)
     {
-        elements[i]=new double[cols];
+        allocateMemory();
     }
-    for(int i=0;i<rows;i++)
+    nmacierz(const nmacierz &other) : rows(other.rows), cols(other.cols), elements(nullptr)
     {
-        for(int j=0;j<cols;j++)
+        copyFrom(other);
+    }
+    nmacierz(nmacierz &&other) noexcept : rows(other.rows), cols(other.cols), elements(other.elements)
+    {
+        other.rows = 0;
+        other.cols = 0;
+        other.elements = nullptr;
+    }
+    nmacierz &operator=(const nmacierz &other)
+    {
+        if (this != &other)
         {
-            elements[i][j]=0;
+            deallocateMemory();
+            rows = other.rows;
+            cols = other.cols;
+            copyFrom(other);
         }
+        return *this;
     }
-}
-nmacierz(const nmacierz &other) // Konstruktor kopiujacy //dziala
-{
-    cols=other.cols;
-    rows=other.rows;
-    elements=new double*[rows];
-    for(int i=0;i<rows;i++)
+    nmacierz &operator=(nmacierz &&other) noexcept
     {
-        elements[i]=new double[cols];
-    }
-    for(int i=0;i<rows;i++)
-    {
-        for(int j=0;j<cols;j++)
+        if (this != &other)
         {
-            elements[i][j]=other.elements[i][j];
+            deallocateMemory();
+            rows = other.rows;
+            cols = other.cols;
+            elements = other.elements;
+            other.rows = 0;
+            other.cols = 0;
+            other.elements = nullptr;
         }
+        return *this;
     }
-}
-nmacierz(nmacierz &&other) //Konstruktor przenoszący //dziala
-{
-    cols=other.cols;
-    rows=other.rows;
-    elements=new double*[rows];
-    for(int i=0;i<rows;i++)
+    ~nmacierz()
     {
-        elements[i]=new double[cols];
+        deallocateMemory();
     }
-    for(int i=0;i<rows;i++)
-    {
-        for(int j=0;j<cols;j++)
-        {
-            elements[i][j]=other.elements[i][j];
-        }
-    }
-    delete [] other.elements;
-    other.rows=0;
-    other.cols=0; 
-}
-nmacierz & operator=(const nmacierz &other) // Przeladowanie operatora kopiujacego //dziala
-{
-    if(this!=&other)
-    {
-        delete [] elements;
-        rows=other.rows;
-        cols=other.cols;
-        elements=new double*[rows];
-        for(int i=0;i<rows;i++)
-        {
-            elements[i]=new double[cols];
-        }
-        for(int i=0;i<rows;i++)
-        {
-            for(int j=0;j<cols;j++)
-            {
-                elements[i][j]=other.elements[i][j];
-            }
-        }
 
-    }
-    return *this;
-}
-nmacierz & operator=(nmacierz &&other ) //Przeladowanie, operator przenoszacy //dziala
-{
-    if(this!=&other)
+    double *operator[](unsigned int row)
     {
-        delete [] elements;
-        rows=other.rows;
-        cols=other.cols;
-        elements=new double*[rows];
-        for(int i=0;i<rows;i++)
-        {
-            elements[i]=new double[cols];
-        }
-        for(int i=0;i<rows;i++)
-        {
-            for(int j=0;j<cols;j++)
-            {
-                elements[i][j]=other.elements[i][j];
-            }
-        }
-        delete [] other.elements;
-        other.rows=0;
-        other.cols=0;
+        return elements[row];
+    }
 
-    }
-    return *this;
-}
-~nmacierz() //Destruktor
-{
-    delete [] elements;
-}
-double *operator[](unsigned int row)
-{
-    return elements[row];
-}
-nmacierz operator*(nmacierz &other) //Przeladowanie, operator mnozenia //NIE DZIALA
-{
-    
-    if(this->cols!=other.rows)
+    nmacierz operator*(nmacierz &other)
     {
-        throw std::invalid_argument("Liczba kolumn i wierszy nie zgadza sie, nie da sie pomnozyc");
-    }
-    else
-    {
-        
-        nmacierz wynik(rows, other.cols);
-        for(int i=0;i<rows;i++)
+        if (this->cols != other.rows)
         {
-            for(int j=0;j<other.cols;j++)
+            throw std::invalid_argument("Liczba kolumn i wierszy nie zgadza się, nie da się pomnożyć");
+        }
+        else
+        {
+            nmacierz result(rows, other.cols);
+            for (int i = 0; i < rows; i++)
             {
-                wynik.elements[i][j] = 0;
-                for(int k=0; k<other.rows; k++)
+                for (int j = 0; j < other.cols; j++)
                 {
-                    wynik.elements[i][j]+=elements[i][k]*other.elements[k][j];
-                    
-                    
+                    result.elements[i][j] = 0;
+                    for (int k = 0; k < other.rows; k++)
+                    {
+                        result.elements[i][j] += elements[i][k] * other.elements[k][j];
+                    }
                 }
             }
+            return result;
         }
-        
-        return wynik;
     }
-}
-friend std::ostream & operator<<(std::ostream&out, const nmacierz &other);
+
+    friend std::ostream &operator<<(std::ostream &out, const nmacierz &matrix);
+
 private:
-int rows;
-int cols;
-double **elements;
+    int rows;
+    int cols;
+    double **elements;
+
+    void allocateMemory()
+    {
+        elements = new double *[rows];
+        for (int i = 0; i < rows; i++)
+        {
+            elements[i] = new double[cols];
+        }
+    }
+
+    void copyFrom(const nmacierz &other)
+    {
+        allocateMemory();
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                elements[i][j] = other.elements[i][j];
+            }
+        }
+    }
+
+    void deallocateMemory()
+    {
+        if (elements != nullptr)
+        {
+            for (int i = 0; i < rows; i++)
+            {
+                delete[] elements[i];
+            }
+            delete[] elements;
+            elements = nullptr;
+        }
+    }
 };
 
-std::ostream & operator<<(std::ostream &out, const nmacierz &other) // Przeladowanie, operator do wypisywania
+std::ostream &operator<<(std::ostream &out, const nmacierz &matrix)
 {
-    out<<"---Wypisanie macierzy:---\n";
-    for(int i=0;i<other.rows;i++)
+    out << "---Wypisanie macierzy:---\n";
+    for (int i = 0; i < matrix.rows; i++)
     {
-        out<<"(";
-        for(int j=0;j<other.cols;j++)
+        out << "( ";
+        for (int j = 0; j < matrix.cols; j++)
         {
-            out<<other.elements[i][j]<<" ";
+            out << matrix.elements[i][j] << " ";
         }
-        out<<")"<<std::endl;
+        out << ")" << std::endl;
     }
-
     return out;
 }
