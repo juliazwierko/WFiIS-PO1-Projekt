@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "C:/Users/Seba/Desktop/projektcpp/WFiIS-PO1-Projekt/main.cpp" "CMakeFiles/Poli.dir/main.cpp.obj" "gcc" "CMakeFiles/Poli.dir/main.cpp.obj.d"
+  "C:/Users/Seba/Desktop/WFiIS-PO1-Projekt/main.cpp" "CMakeFiles/Poli.dir/main.cpp.obj" "gcc" "CMakeFiles/Poli.dir/main.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

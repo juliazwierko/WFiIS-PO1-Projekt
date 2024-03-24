@@ -107,7 +107,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "C:/Program Files/CMake/share/cmake-3.27/Modules/Platform/Windows-windres.cmake"
   "C:/Program Files/CMake/share/cmake-3.27/Modules/Platform/Windows.cmake"
   "C:/Program Files/CMake/share/cmake-3.27/Modules/Platform/WindowsPaths.cmake"
-  "C:/Users/Seba/Desktop/projektcpp/WFiIS-PO1-Projekt/CMakeLists.txt"
+  "C:/Users/Seba/Desktop/WFiIS-PO1-Projekt/CMakeLists.txt"
   "CMakeFiles/3.27.7/CMakeCCompiler.cmake"
   "CMakeFiles/3.27.7/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.27.7/CMakeRCCompiler.cmake"

@@ -84,15 +84,108 @@ class nmacierz
 {
 public:
 nmacierz() = default;
-nmacierz(int rows, int cols): rows(rows),cols(cols)
+nmacierz(int rows, int cols): rows(rows),cols(cols) //dziala
 {
     elements=new double*[rows];
     for(int i=0;i<rows;i++)
     {
         elements[i]=new double[cols];
     }
+    for(int i=0;i<rows;i++)
+    {
+        for(int j=0;j<cols;j++)
+        {
+            elements[i][j]=0;
+        }
+    }
 }
-~nmacierz()
+nmacierz(const nmacierz &other) // Konstruktor kopiujacy //dziala
+{
+    cols=other.cols;
+    rows=other.rows;
+    elements=new double*[rows];
+    for(int i=0;i<rows;i++)
+    {
+        elements[i]=new double[cols];
+    }
+    for(int i=0;i<rows;i++)
+    {
+        for(int j=0;j<cols;j++)
+        {
+            elements[i][j]=other.elements[i][j];
+        }
+    }
+}
+nmacierz(nmacierz &&other) //Konstruktor przenoszący //dziala
+{
+    cols=other.cols;
+    rows=other.rows;
+    elements=new double*[rows];
+    for(int i=0;i<rows;i++)
+    {
+        elements[i]=new double[cols];
+    }
+    for(int i=0;i<rows;i++)
+    {
+        for(int j=0;j<cols;j++)
+        {
+            elements[i][j]=other.elements[i][j];
+        }
+    }
+    delete [] other.elements;
+    other.rows=0;
+    other.cols=0; 
+}
+nmacierz & operator=(const nmacierz &other) // Przeladowanie operatora kopiujacego //dziala
+{
+    if(this!=&other)
+    {
+        delete [] elements;
+        rows=other.rows;
+        cols=other.cols;
+        elements=new double*[rows];
+        for(int i=0;i<rows;i++)
+        {
+            elements[i]=new double[cols];
+        }
+        for(int i=0;i<rows;i++)
+        {
+            for(int j=0;j<cols;j++)
+            {
+                elements[i][j]=other.elements[i][j];
+            }
+        }
+
+    }
+    return *this;
+}
+nmacierz & operator=(nmacierz &&other ) //Przeladowanie, operator przenoszacy //dziala
+{
+    if(this!=&other)
+    {
+        delete [] elements;
+        rows=other.rows;
+        cols=other.cols;
+        elements=new double*[rows];
+        for(int i=0;i<rows;i++)
+        {
+            elements[i]=new double[cols];
+        }
+        for(int i=0;i<rows;i++)
+        {
+            for(int j=0;j<cols;j++)
+            {
+                elements[i][j]=other.elements[i][j];
+            }
+        }
+        delete [] other.elements;
+        other.rows=0;
+        other.cols=0;
+
+    }
+    return *this;
+}
+~nmacierz() //Destruktor
 {
     delete [] elements;
 }
@@ -100,32 +193,53 @@ double *operator[](unsigned int row)
 {
     return elements[row];
 }
-nmacierz operator*(nmacierz &other)
+nmacierz operator*(nmacierz &other) //Przeladowanie, operator mnozenia //NIE DZIALA
 {
     
     if(this->cols!=other.rows)
     {
-        throw std::invalid_argument("Liczba kolumn i wierszy nie zgadza się, nie da się pomnożyć");
+        throw std::invalid_argument("Liczba kolumn i wierszy nie zgadza sie, nie da sie pomnozyc");
     }
     else
     {
+        
         nmacierz wynik(rows, other.cols);
-        for(size_t i=0;i<rows;i++)
+        for(int i=0;i<rows;i++)
         {
-            for(size_t j=0;i<other.cols;j++)
+            for(int j=0;j<other.cols;j++)
             {
-                for(size_t k=0; k<cols; k++)
+                wynik.elements[i][j] = 0;
+                for(int k=0; k<other.rows; k++)
                 {
-                    wynik[i][j]+=elements[i][k]*other.elements[k][j];
+                    wynik.elements[i][j]+=elements[i][k]*other.elements[k][j];
+                    
+                    
                 }
             }
         }
+        
         return wynik;
     }
 }
+friend std::ostream & operator<<(std::ostream&out, const nmacierz &other);
 private:
 int rows;
 int cols;
 double **elements;
 };
 
+std::ostream & operator<<(std::ostream &out, const nmacierz &other) // Przeladowanie, operator do wypisywania
+{
+    out<<"---Wypisanie macierzy:---\n";
+    for(int i=0;i<other.rows;i++)
+    {
+        out<<"(";
+        for(int j=0;j<other.cols;j++)
+        {
+            out<<other.elements[i][j]<<" ";
+        }
+        out<<")"<<std::endl;
+    }
+
+    return out;
+}

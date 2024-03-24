@@ -23,5 +23,23 @@ int main() {
     // nwektor w5;
     // w5=std::move(w4); 
 //Przetestuj pozostałe operatory. Będą potrzebne !
+   /* nmacierz m1(3,3);
+    nmacierz m2(3,3);
+    std::cout<<m1;
+    std::cout<<m2;
+    for(int i=0;i<3;i++)
+    {
+        for(int j=0;j<3;j++)
+        {
+            m1[i][j]=i+j;
+            m2[i][j]=i-j;
+        }
+    }
+    std::cout<<m1;
+    std::cout<<m2;
+    nmacierz m3(3,3);
+    m3=(m1*m2);
+    std::cout<<m3;  *///testowanie moje na macierzach --Seba
+
     return 0;
 }
