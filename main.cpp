@@ -20,8 +20,8 @@ int main() {
     //użycie konstruktora i przypisania przenoszącego
     nwektor w4=std::move(w1);
     std::cout<<w4<<"\n";
-    // nwektor w5;
-    // w5=std::move(w4); 
+    nwektor w5;
+    w5=std::move(w4); 
 //Przetestuj pozostałe operatory. Będą potrzebne !
     
 //Macierz
