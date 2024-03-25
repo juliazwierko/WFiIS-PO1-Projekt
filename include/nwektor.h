@@ -5,8 +5,12 @@
 #include <stdexcept>
 #include <utility>
 
+class nmacierz;
+
 class nwektor {
 public:
+    friend class nmacierz;
+
     // Konstruktor domyślny
     nwektor() : elements(nullptr), size(0) {}
 
@@ -45,7 +49,7 @@ public:
         if (size != other.size) {
             throw std::invalid_argument("Wektor ma inny rozmiar");
         }
-        nwektor result{};
+        nwektor result(size);
 
         for (unsigned i = 0; i < size; i++) {
             result.elements[i] = elements[i] + other.elements[i];
@@ -88,7 +92,8 @@ public:
     
     // Operator wypisywania 
     friend std::ostream& operator<<(std::ostream& os, const nwektor& vec) {
-        os << "---Wypisanie wektora:---\n(";
+        os << "( ";
+        // os << "---Wypisanie wektora:---\n(";
         for (size_t i = 0; i < vec.size; ++i) {
             os << vec.elements[i] << " ";
         }
@@ -99,43 +104,35 @@ public:
 private:
     double* elements;
     size_t size;
+
+    // Prywatny konstruktor do tworzenia wektorów o określonym rozmiarze
+    nwektor(size_t size) : elements(new double[size]), size(size) {}
 };
 
 
-// TU ma byc klasa dla macierzy:
 class nmacierz
 {
 public:
+    // Konstruktor domyślny
     nmacierz() : rows(0), cols(0), elements(nullptr) {}
-    nmacierz(int rows, int cols) : rows(rows), cols(cols), elements(nullptr)
-    {
-        allocateMemory();
+
+    // Konstruktor przyjmujący liczbę wierszy i kolumn
+    nmacierz(int rows, int cols) : rows(rows), cols(cols), elements(new nwektor[rows]) {
+        for (int i = 0; i < rows; ++i) {
+            elements[i] = nwektor(cols);
+        }
     }
-    nmacierz(const nmacierz &other) : rows(other.rows), cols(other.cols), elements(nullptr)
-    {
-        copyFrom(other);
-    }
-    nmacierz(nmacierz &&other) noexcept : rows(other.rows), cols(other.cols), elements(other.elements)
-    {
+
+    // Konstruktor przenoszący
+    nmacierz(nmacierz&& other) noexcept : rows(other.rows), cols(other.cols), elements(other.elements) {
         other.rows = 0;
         other.cols = 0;
         other.elements = nullptr;
     }
-    nmacierz &operator=(const nmacierz &other)
-    {
-        if (this != &other)
-        {
-            deallocateMemory();
-            rows = other.rows;
-            cols = other.cols;
-            copyFrom(other);
-        }
-        return *this;
-    }
-    nmacierz &operator=(nmacierz &&other) noexcept
-    {
-        if (this != &other)
-        {
+
+    // Operator przypisania przenoszącego
+    nmacierz& operator=(nmacierz&& other) noexcept {
+        if (this != &other) {
             deallocateMemory();
             rows = other.rows;
             cols = other.cols;
@@ -146,108 +143,63 @@ public:
         }
         return *this;
     }
-    ~nmacierz()
-    {
+
+    // Destruktor
+    ~nmacierz() {
         deallocateMemory();
     }
 
-    //Operator [] do dostepu
-    double *operator[](const int row)
-    {
-        if(row >= rows)
-        {
-            throw std::invalid_argument("Indeks poza macierza");
+    //Operator [] do dostępu do wiersza
+    nwektor& operator[](const int row) {
+        if (row >= rows) {
+            throw std::invalid_argument("Indeks poza macierzą");
         }
         return elements[row];
     }
 
-    //Operator [] do odczytu
-    const double *operator[](const int row) const
-    {
-        if(row >= rows)
-        {
-            throw std::invalid_argument("Indeks poza macierza");
+    //Operator [] do odczytu wiersza
+    const nwektor& operator[](const int row) const {
+        if (row >= rows) {
+            throw std::invalid_argument("Indeks poza macierzą");
         }
         return elements[row];
     }
 
-    nmacierz operator*(nmacierz &other)
-    {
-        if (this->cols != other.rows)
-        {
-            throw std::invalid_argument("Liczba kolumn i wierszy nie zgadza się, nie da się pomnożyć");
+    // Operator mnożenia macierzy
+    nmacierz operator*(const nmacierz& other) const {
+        if (cols != other.rows) {
+            throw std::invalid_argument("Nieprawidłowe wymiary macierzy do mnożenia");
         }
-        else
-        {
-            nmacierz result(rows, other.cols);
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < other.cols; j++)
-                {
-                    result.elements[i][j] = 0;
-                    for (int k = 0; k < other.rows; k++)
-                    {
-                        result.elements[i][j] += elements[i][k] * other.elements[k][j];
-                    }
+        nmacierz result(rows, other.cols);
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < other.cols; ++j) {
+                for (int k = 0; k < cols; ++k) {
+                    result[i][j] += elements[i][k] * other[k][j];
                 }
             }
-            return result;
         }
+        return result;
     }
 
-    friend std::ostream &operator<<(std::ostream &out, const nmacierz &matrix);
+    // Operator wypisywania
+    friend std::ostream& operator<<(std::ostream& os, const nmacierz& matrix) {
+        // os << "---Wypisanie macierzy:---\n";
+        for (int i = 0; i < matrix.rows; ++i) {
+            os << matrix.elements[i] << std::endl;
+        }
+        return os;
+    }
 
 private:
     int rows;
     int cols;
-    double **elements;
+    nwektor* elements;
 
-    void allocateMemory()
-    {
-        elements = new double *[rows];
-        for (int i = 0; i < rows; i++)
-        {
-            elements[i] = new double[cols];
-        }
-    }
-
-    void copyFrom(const nmacierz &other)
-    {
-        allocateMemory();
-        for (int i = 0; i < rows; i++)
-        {
-            for (int j = 0; j < cols; j++)
-            {
-                elements[i][j] = other.elements[i][j];
-            }
-        }
-    }
-
-    void deallocateMemory()
-    {
-        if (elements != nullptr)
-        {
-            for (int i = 0; i < rows; i++)
-            {
-                delete[] elements[i];
-            }
+    // Funkcja do dealokacji pamięci
+    void deallocateMemory() {
+        if (elements != nullptr) {
             delete[] elements;
             elements = nullptr;
         }
     }
 };
-
-std::ostream &operator<<(std::ostream &out, const nmacierz &matrix)
-{
-    out << "---Wypisanie macierzy:---\n";
-    for (int i = 0; i < matrix.rows; i++)
-    {
-        out << "( ";
-        for (int j = 0; j < matrix.cols; j++)
-        {
-            out << matrix.elements[i][j] << " ";
-        }
-        out << ")" << std::endl;
-    }
-    return out;
-}

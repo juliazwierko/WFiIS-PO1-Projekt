@@ -14,21 +14,25 @@
 #include "nwektor.h"
 #include <cmath>
 int main() {
+    //              *KLASA nwektor*
+    std::cout << "---Testowanie klasy nwektor---\n";
     nwektor w1=nwektor{{1,2,3,4,5,6,7}};
     nwektor w2=nwektor{{1,2,3,4,5,6,7,8,9,10,11}};
     // nwektor w3=w2+w1;  //powinno skutkować wyjątkiem;
     //użycie konstruktora i przypisania przenoszącego
     nwektor w4=std::move(w1);
-    std::cout<<w4<<"\n";
+    std::cout << "Wartosci wektora:\n" << w4 << "\n\n";
     nwektor w5;
     w5=std::move(w4); 
-//Przetestuj pozostałe operatory. Będą potrzebne !
+    //Przetestuj pozostałe operatory. Będą potrzebne !
     
-//Macierz
+
+    //              *KLASA nmacierz*
+    std::cout << "---Testowanie klasy nmacierz---\n";
     nmacierz m1(3, 3);
     nmacierz m2(3, 3);
-    std::cout << m1;
-    std::cout << m2;
+    std::cout << "Macierz m1: \n" << m1 << std::endl;
+    std::cout << "Macierz m2: \n" << m2 << std::endl;
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
@@ -37,11 +41,12 @@ int main() {
             m2[i][j] = i - j;
         }
     }
-    std::cout << m1;
-    std::cout << m2;
+    std::cout << "Macierz m1: \n" << m1 << std::endl;
+    std::cout << "Macierz m2: \n" << m2 << std::endl;
+    
     nmacierz m3(3, 3);
     m3 = (m1 * m2);
-    std::cout << m3;
+    std::cout << "Wynik mnozenia m1*m2:\n"<< m3 << std::endl;
 
     return 0;
 }
