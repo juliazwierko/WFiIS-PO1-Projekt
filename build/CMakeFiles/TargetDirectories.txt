@@ -1,0 +1,3 @@
+/Users/julia_zverko/Desktop/WFiIS-PO1-Projekt/build/CMakeFiles/Poli.dir
+/Users/julia_zverko/Desktop/WFiIS-PO1-Projekt/build/CMakeFiles/edit_cache.dir
+/Users/julia_zverko/Desktop/WFiIS-PO1-Projekt/build/CMakeFiles/rebuild_cache.dir

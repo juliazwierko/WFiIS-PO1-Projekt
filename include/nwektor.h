@@ -7,6 +7,9 @@
 
 class nwektor {
 public:
+    // Konstruktor domyślny
+    nwektor() : elements(nullptr), size(0) {}
+
     // Konstruktor przyjmujący obiekt std::initializer_list<double>
     nwektor(std::initializer_list<double> values) : elements(new double[values.size()]), size(values.size()) {
         size_t i = 0;
