@@ -48,5 +48,9 @@ int main() {
     m3 = (m1 * m2);
     std::cout << "Wynik mnozenia m1*m2:\n"<< m3 << std::endl;
 
+    nmacierz m4(3, 3);
+    m4 = m1 + m2;
+    std::cout << "Wynik dodawania m1+m2:\n" << m4 << std::endl;
+
     return 0;
 }
