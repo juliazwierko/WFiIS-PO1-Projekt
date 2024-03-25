@@ -63,6 +63,26 @@ public:
         return *this;
     }
 
+    //Operator [] do odczytu
+    const double& operator[](const unsigned int index) const 
+    {
+        if(index >= size)
+        {
+            throw std::invalid_argument("Indeks poza wektorem");
+        }
+        return elements[index];
+    }
+
+    //Operator [] do dostępu do elementu
+    double& operator[](const unsigned int index) 
+    {
+        if(index >= size)
+        {
+            throw std::invalid_argument("Indeks poza wektorem");
+        }
+        return elements[index];
+    }
+    
     // Operator wypisywania 
     friend std::ostream& operator<<(std::ostream& os, const nwektor& vec) {
         os << "---Wypisanie wektora:---\n(";
@@ -128,8 +148,23 @@ public:
         deallocateMemory();
     }
 
-    double *operator[](unsigned int row)
+    //Operator [] do dostepu
+    double *operator[](const int row)
     {
+        if(row >= rows)
+        {
+            throw std::invalid_argument("Indeks poza macierza");
+        }
+        return elements[row];
+    }
+
+    //Operator [] do odczytu
+    const double *operator[](const int row) const
+    {
+        if(row >= rows)
+        {
+            throw std::invalid_argument("Indeks poza macierza");
+        }
         return elements[row];
     }
 
