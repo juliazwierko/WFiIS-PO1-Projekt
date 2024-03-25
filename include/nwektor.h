@@ -190,6 +190,20 @@ public:
         return os;
     }
 
+    // Operator dodawania
+    nmacierz operator+(const nmacierz& other) const {
+        if (rows != other.rows || cols != other.cols) {
+            throw std::invalid_argument("Nieprawidłowe wymiary macierzy do dodawania");
+        }
+        nmacierz result(rows, cols);
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                result[i][j] = elements[i][j] + other[i][j];
+            }
+        }
+        return result;
+    }
+
 private:
     int rows;
     int cols;
